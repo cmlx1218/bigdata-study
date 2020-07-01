@@ -26,7 +26,7 @@ object HBaseSpark {
 
     //3 构建HBase配置信息
     val conf: Configuration = HBaseConfiguration.create()
-    conf.set("hbase.zookeeper.quorum","zq102,zq103,zq104")
+    conf.set("hbase.zookeeper.quorum", "zq102,zq103,zq104")
     conf.set(TableInputFormat.INPUT_TABLE, "rddtable");
 
     //4 HBase 读取数据形成RDD
