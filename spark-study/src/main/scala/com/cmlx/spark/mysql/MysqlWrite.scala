@@ -11,7 +11,7 @@ object MysqlWrite {
 
   def main(args: Array[String]): Unit = {
 
-    val sparkConf = new SparkConf().setMaster("spark://zq102:7077").setAppName("HBaseApp")
+    val sparkConf = new SparkConf().setMaster("local[*]").setAppName("WordCount")
     val sc = new SparkContext(sparkConf)
     val data = sc.parallelize(List(
       Map("userName" -> "周芷若",
@@ -34,10 +34,10 @@ object MysqlWrite {
     val conn = java.sql.DriverManager.getConnection("jdbc:mysql://39.96.178.201/rdd", "root", "123456")
     iterator.foreach(data =>{
       val ps = conn.prepareStatement("insert into rddtable(userName,age,hobby,address) values(?,?,?,?)")
-      ps.setString(1,data.get("userName").asInstanceOf[String])
-      ps.setString(2,data.get("age").asInstanceOf[String])
-      ps.setString(3,data.get("hobby").asInstanceOf[String])
-      ps.setString(4,data.get("address").asInstanceOf[String])
+      ps.setString(1,data.getOrElse("userName","").asInstanceOf[String])
+      ps.setInt(2,data.getOrElse("age",0).asInstanceOf[Int])
+      ps.setString(3,data.getOrElse("hobby","").asInstanceOf[String])
+      ps.setString(4,data.getOrElse("address","").asInstanceOf[String])
       ps.executeUpdate()
     })
   }
